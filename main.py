@@ -5,6 +5,39 @@ from PIL import Image
 import threading
 from tkinter import ttk
 import time
+import re
+from datetime import datetime
+
+def extract_p_number(filename):
+    """从文件名中提取p后面的数字"""
+    match = re.search(r'p(\d+)', filename.lower())
+    if match:
+        return int(match.group(1))
+    return 0  # 如果没有找到p+数字，返回0
+
+def extract_date_from_filename(filename):
+    """从文件名中提取日期（格式为YYYY-MM-DD或YYYYMMDD）"""
+    # 先尝试匹配带分隔符的日期
+    date_match = re.search(r'(\d{4}-\d{2}-\d{2})', filename)
+    if date_match:
+        try:
+            return datetime.strptime(date_match.group(1), "%Y-%m-%d")
+        except ValueError:
+            pass
+    
+    # 再尝试匹配不带分隔符的日期
+    date_match = re.search(r'(\d{4})(\d{2})(\d{2})', filename)
+    if date_match:
+        try:
+            return datetime.strptime(f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}", "%Y-%m-%d")
+        except ValueError:
+            pass
+    
+    return None  # 如果没有找到日期，返回None
+
+def get_filename_without_ext(filename):
+    """获取不带后缀的文件名"""
+    return os.path.splitext(filename)[0]
 
 def select_folder():
     folder_selected = filedialog.askdirectory()
@@ -21,6 +54,9 @@ def select_folder():
 
 def update_file_list(folder):
     listbox_files.delete(0, tk.END)
+    if not folder:
+        return
+    
     images = [f for f in os.listdir(folder) if f.lower().endswith(('png', 'jpg', 'jpeg','webp'))]
     
     # 获取排序方式和顺序
@@ -32,6 +68,29 @@ def update_file_list(folder):
         images.sort(key=lambda x: x.lower(), reverse=reverse_order)
     elif sort_by == "time":
         images.sort(key=lambda x: os.path.getmtime(os.path.join(folder, x)), reverse=reverse_order)
+    elif sort_by == "prefix":
+        try:
+            n = int(prefix_n.get())
+            # 排序键：前N位小写（倒序） + p后面的数字（正序）
+            images.sort(key=lambda x: (
+                x[:n].lower() if len(x) >= n else x.lower(),
+                -extract_p_number(x) if reverse_order else extract_p_number(x)
+            ), reverse=reverse_order)
+        except ValueError:
+            messagebox.showerror("错误", "请输入有效的数字N")
+            return
+    elif sort_by == "suffix":
+        try:
+            n = int(suffix_n.get())
+            # 排序键：后N位小写（倒序） + 日期（倒序） + p后面的数字（正序）
+            images.sort(key=lambda x: (
+                get_filename_without_ext(x)[-n:].lower() if len(get_filename_without_ext(x)) >= n else get_filename_without_ext(x).lower(),
+                extract_date_from_filename(x) or "",
+                -extract_p_number(x) if reverse_order else extract_p_number(x)
+            ), reverse=reverse_order)
+        except ValueError:
+            messagebox.showerror("错误", "请输入有效的数字N")
+            return
     
     for img in images:
         listbox_files.insert(tk.END, img)
@@ -81,6 +140,27 @@ def merge_images_worker():
         images.sort(key=lambda x: x.lower(), reverse=reverse_order)
     elif sort_by == "time":
         images.sort(key=lambda x: os.path.getmtime(os.path.join(folder, x)), reverse=reverse_order)
+    elif sort_by == "prefix":
+        try:
+            n = int(prefix_n.get())
+            images.sort(key=lambda x: (
+                x[:n].lower() if len(x) >= n else x.lower(),
+                -extract_p_number(x) if reverse_order else extract_p_number(x)
+            ), reverse=reverse_order)
+        except ValueError:
+            messagebox.showerror("错误", "请输入有效的数字N")
+            return
+    elif sort_by == "suffix":
+        try:
+            n = int(suffix_n.get())
+            images.sort(key=lambda x: (
+                get_filename_without_ext(x)[-n:].lower() if len(get_filename_without_ext(x)) >= n else get_filename_without_ext(x).lower(),
+                extract_date_from_filename(x) or "",
+                -extract_p_number(x) if reverse_order else extract_p_number(x)
+            ), reverse=reverse_order)
+        except ValueError:
+            messagebox.showerror("错误", "请输入有效的数字N")
+            return
     
     image_paths = [os.path.join(folder, f) for f in images]
     
@@ -111,7 +191,7 @@ def merge_images_worker():
 # 创建GUI窗口
 root = tk.Tk()
 root.title("图像合并为PDF")
-root.geometry("500x550")
+root.geometry("500x650")
 
 frame = tk.Frame(root)
 frame.pack(pady=10)
@@ -132,10 +212,30 @@ tk.Radiobutton(sort_frame, text="文件名", variable=sort_var, value="filename"
               command=lambda: update_file_list(entry_folder.get()) if entry_folder.get() else None).pack(side=tk.LEFT)
 tk.Radiobutton(sort_frame, text="修改时间", variable=sort_var, value="time", 
               command=lambda: update_file_list(entry_folder.get()) if entry_folder.get() else None).pack(side=tk.LEFT)
+tk.Radiobutton(sort_frame, text="文件名前N位", variable=sort_var, value="prefix", 
+              command=lambda: update_file_list(entry_folder.get()) if entry_folder.get() else None).pack(side=tk.LEFT)
+tk.Radiobutton(sort_frame, text="文件名后N位", variable=sort_var, value="suffix", 
+              command=lambda: update_file_list(entry_folder.get()) if entry_folder.get() else None).pack(side=tk.LEFT)
 
 order_var = tk.BooleanVar(value=False)
 tk.Checkbutton(sort_frame, text="倒序", variable=order_var, 
               command=lambda: update_file_list(entry_folder.get()) if entry_folder.get() else None).pack(side=tk.LEFT)
+
+# 前N位设置
+prefix_frame = tk.Frame(root)
+prefix_frame.pack(pady=5)
+tk.Label(prefix_frame, text="前N位:").pack(side=tk.LEFT)
+prefix_n = tk.StringVar(value="3")
+tk.Entry(prefix_frame, textvariable=prefix_n, width=5).pack(side=tk.LEFT)
+prefix_n.trace_add("write", lambda *args: update_file_list(entry_folder.get()) if entry_folder.get() and sort_var.get() == "prefix" else None)
+
+# 后N位设置
+suffix_frame = tk.Frame(root)
+suffix_frame.pack(pady=5)
+tk.Label(suffix_frame, text="后N位:").pack(side=tk.LEFT)
+suffix_n = tk.StringVar(value="3")
+tk.Entry(suffix_frame, textvariable=suffix_n, width=5).pack(side=tk.LEFT)
+suffix_n.trace_add("write", lambda *args: update_file_list(entry_folder.get()) if entry_folder.get() and sort_var.get() == "suffix" else None)
 
 # 文件列表
 listbox_files = tk.Listbox(root, width=60, height=10)
