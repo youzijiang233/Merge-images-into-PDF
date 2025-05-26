@@ -45,12 +45,11 @@ def select_folder():
         entry_folder.delete(0, tk.END)
         entry_folder.insert(0, folder_selected)
         update_file_list(folder_selected)
-        # 自动设置默认输出文件名
-        if not entry_output.get():
-            default_output = os.path.join(os.path.dirname(folder_selected), 
-                                        os.path.basename(folder_selected) + ".pdf")
-            entry_output.delete(0, tk.END)
-            entry_output.insert(0, default_output)
+        # 自动设置默认输出文件名（不再检查输出栏是否已有内容）
+        default_output = os.path.join(os.path.dirname(folder_selected), 
+                                    os.path.basename(folder_selected) + ".pdf")
+        entry_output.delete(0, tk.END)
+        entry_output.insert(0, default_output)
 
 def update_file_list(folder):
     listbox_files.delete(0, tk.END)
