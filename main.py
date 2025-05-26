@@ -224,7 +224,7 @@ tk.Checkbutton(sort_frame, text="倒序", variable=order_var,
 prefix_frame = tk.Frame(root)
 prefix_frame.pack(pady=5)
 tk.Label(prefix_frame, text="前N位:").pack(side=tk.LEFT)
-prefix_n = tk.StringVar(value="3")
+prefix_n = tk.StringVar(value="9")
 tk.Entry(prefix_frame, textvariable=prefix_n, width=5).pack(side=tk.LEFT)
 prefix_n.trace_add("write", lambda *args: update_file_list(entry_folder.get()) if entry_folder.get() and sort_var.get() == "prefix" else None)
 
@@ -232,7 +232,7 @@ prefix_n.trace_add("write", lambda *args: update_file_list(entry_folder.get()) i
 suffix_frame = tk.Frame(root)
 suffix_frame.pack(pady=5)
 tk.Label(suffix_frame, text="后N位:").pack(side=tk.LEFT)
-suffix_n = tk.StringVar(value="3")
+suffix_n = tk.StringVar(value="10")
 tk.Entry(suffix_frame, textvariable=suffix_n, width=5).pack(side=tk.LEFT)
 suffix_n.trace_add("write", lambda *args: update_file_list(entry_folder.get()) if entry_folder.get() and sort_var.get() == "suffix" else None)
 
