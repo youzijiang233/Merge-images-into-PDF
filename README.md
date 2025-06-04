@@ -19,7 +19,7 @@
 ## 使用方法
 
 1. **运行程序**：
-   在releases中下载[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.2/Merge-images-into-PDF.exe)，需先确保已安装必要依赖（见下方安装要求）。
+   在releases中下载[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.21/Merge-images-into-PDF_.exe)，需先确保已安装必要依赖（见下方安装要求）。
 
 2. **选择图像文件夹**：
    点击“选择文件夹”按钮，选中包含图片的文件夹。
