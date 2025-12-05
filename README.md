@@ -6,6 +6,8 @@
 
 - 支持的图像格式：`.png`、`.jpg`、`.jpeg`、`.webp`
 - 图形化界面，操作简单直观
+- 拖动导入方便快捷
+- 支持多任务处理
 - 支持多种图像排序方式：
   - 按文件名排序
   - 按修改时间排序
@@ -19,7 +21,7 @@
 ## 使用方法
 
 1. **运行程序**：
-   在releases中下载[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.21/Merge-images-into-PDF_.exe)，需先确保已安装必要依赖（见下方安装要求）。
+   在releases中下载[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.3/Merge-images-into-PDF.exe)，需先确保已安装必要依赖（见下方安装要求）。
 
 2. **选择图像文件夹**：
    点击“选择文件夹”按钮，选中包含图片的文件夹。
@@ -34,7 +36,7 @@
 
 5. **设置输出文件路径**：
    - 默认输出为与所选文件夹同名的 PDF 文件，保存在其上级目录。
-   - 也可点击“选择输出文件”按钮自定义路径和文件名。
+   - 也可自定义文件名，默认为{folder_name}（文件夹名）。
 
 6. **点击“合并为 PDF”**：
    - 启动合并线程处理图像文件。
