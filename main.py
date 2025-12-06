@@ -178,6 +178,21 @@ def batch_worker():
 
         if image_list:
             image_list[0].save(output_path, save_all=True, append_images=image_list[1:])
+            
+            #新增：释放内存
+            # 1. 关闭所有Image对象
+            for img in image_list:
+                img.close()
+            
+            # 2. 清空列表
+            image_list.clear()
+            
+            # 3. 强制垃圾回收
+            import gc
+            gc.collect()
+
+        # 重置进度条
+        progress_bar['value'] = 0
 
     progress_bar['value'] = 0
     messagebox.showinfo("完成", "所有任务已处理完成！")
@@ -193,7 +208,7 @@ screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
 # 设置窗口尺寸
-window_width = 600
+window_width = 800
 window_height = 720
 
 # 计算右下角坐标（距离屏幕右边和下边各50像素边距）
