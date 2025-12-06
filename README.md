@@ -21,10 +21,10 @@
 ## 使用方法
 
 1. **运行程序**：
-   在releases中下载[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.3/Merge-images-into-PDF.exe)，需先确保已安装必要依赖（见下方安装要求）。
+   在releases中下载打包好的程序[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.3.1/Merge-images-into-PDF.exe)。
 
 2. **选择图像文件夹**：
-   点击“选择文件夹”按钮，选中包含图片的文件夹。
+   点击“选择文件夹”按钮，选中包含图片的文件夹，或者直接拖入。
 
 3. **选择排序方式**：
    选择你希望的排序方式，可以按文件名、时间、前 N 位、后 N 位排序。  
@@ -41,19 +41,6 @@
 6. **点击“合并为 PDF”**：
    - 启动合并线程处理图像文件。
    - 合并完成后，会提示保存成功或报错信息。
-
-## 安装依赖
-
-使用前，请确保已安装以下 Python 库：
-
-```bash
-pip install pillow
-```
-
-该程序使用了以下标准库，无需额外安装：
-
-- `tkinter` （图形界面）
-- `os`、`re`、`time`、`datetime`、`threading`
 
 ## 注意事项
 
