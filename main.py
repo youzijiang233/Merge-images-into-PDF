@@ -8,7 +8,6 @@ import re
 from datetime import datetime
 from tkinterdnd2 import *
 
-# ============= 你原来的逻辑（没改） =============
 def extract_p_number(filename):
     match = re.search(r'p(\d+)', filename.lower())
     if match:
@@ -35,7 +34,7 @@ def get_filename_without_ext(filename):
     return os.path.splitext(filename)[0]
 
 
-# ============= 排序方法（原逻辑不动） =============
+# ============= 排序方法 =============
 def sort_images(images, folder):
     sort_by = sort_var.get()
     reverse_order = order_var.get()
@@ -211,7 +210,7 @@ screen_height = root.winfo_screenheight()
 window_width = 800
 window_height = 720
 
-# 计算右下角坐标（距离屏幕右边和下边各50像素边距）
+# 计算右下角坐标 
 margin_x = 100
 margin_y = 200
 x_position = screen_width - window_width - margin_x
