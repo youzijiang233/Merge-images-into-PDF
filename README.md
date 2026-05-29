@@ -9,7 +9,7 @@
 - 拖动导入方便快捷
 - 支持多任务处理
 - 支持多种图像排序方式：
-  - 按文件名排序
+  - 按文件名排序（自然排序，`2.jpg` 会排在 `10.jpg` 之前）
   - 按修改时间排序
   - 按“文件名前 N 位”排序（可结合 `p+数字` 提取编号）
   - 按“文件名后 N 位”排序（可提取日期和编号）
@@ -21,7 +21,7 @@
 ## 使用方法
 
 1. **运行程序**：
-   在releases中下载打包好的程序[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.3.1/Merge-images-into-PDF.exe)。
+   在releases中下载打包好的程序[Merge-images-into-PDF.exe](https://github.com/youzijiang233/Merge-images-into-PDF/releases/download/1.3.2/Merge-images-into-PDF.exe)。
 
 2. **选择图像文件夹**：
    点击“选择文件夹”按钮，选中包含图片的文件夹，或者直接拖入。

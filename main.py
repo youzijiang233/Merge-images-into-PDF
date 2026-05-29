@@ -2,11 +2,16 @@ import os
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image
+Image.init()
 import threading
 from tkinter import ttk
 import re
 from datetime import datetime
 from tkinterdnd2 import *
+
+def natural_key(s):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', s)]
+
 
 def extract_p_number(filename):
     match = re.search(r'p(\d+)', filename.lower())
@@ -40,7 +45,7 @@ def sort_images(images, folder):
     reverse_order = order_var.get()
 
     if sort_by == "filename":
-        images.sort(key=lambda x: x.lower(), reverse=reverse_order)
+        images.sort(key=natural_key, reverse=reverse_order)
 
     elif sort_by == "time":
         images.sort(key=lambda x: os.path.getmtime(os.path.join(folder, x)), reverse=reverse_order)
@@ -49,7 +54,7 @@ def sort_images(images, folder):
         try:
             n = int(prefix_n.get())
             images.sort(key=lambda x: (
-                x[:n].lower() if len(x) >= n else x.lower(),
+                natural_key(x[:n]) if len(x) >= n else natural_key(x),
                 -extract_p_number(x) if reverse_order else extract_p_number(x)
             ), reverse=reverse_order)
         except:
@@ -59,10 +64,10 @@ def sort_images(images, folder):
         try:
             n = int(suffix_n.get())
             images.sort(key=lambda x: (
-                get_filename_without_ext(x)[-n:].lower()
+                natural_key(get_filename_without_ext(x)[-n:])
                 if len(get_filename_without_ext(x)) >= n else
-                get_filename_without_ext(x).lower(),
-                extract_date_from_filename(x) or "",
+                natural_key(get_filename_without_ext(x)),
+                extract_date_from_filename(x) or datetime.min,
                 -extract_p_number(x) if reverse_order else extract_p_number(x)
             ), reverse=reverse_order)
         except:
